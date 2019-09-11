@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
-* Студент: [Эвелина](https://up.htmlacademy.ru/javascript/18/user/1181123).
-* Наставник: `Неизвестно`.
+* Студент: [Эвелина Сыр](https://up.htmlacademy.ru/javascript/18/user/1181123).
+* Наставник: [Евгений Самойленко](https://up.htmlacademy.ru/javascript/18/user/999539).
 
 ---
 
