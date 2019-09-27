@@ -19,6 +19,17 @@
   var similarPinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
+  var similarCardTemplate = document.querySelector('#card')
+    .content
+    .querySelector('.map__card');
+
+  // объект типов жилья
+  var TypesListMap = {
+    'flat': ['Квартира', 'квартиру'],
+    'bungalo': ['Бунгало', 'бунгало'],
+    'house': ['Дом', 'дом'],
+    'palace': ['Дворец', 'дворец']
+  };
 
   // функция получения рандомного элемента
   function getRandomElem(arr) {
@@ -67,15 +78,61 @@
           y: randLocationY
         }
       };
-      randomAds.offer.title = 'Сдам ' + randomAds.offer.type;
-      randomAds.offer.description = 'Сдаю ' + randomAds.offer.type + ' всего за ' + randomAds.offer.price + '\nФотографии прилагаются.';
+      randomAds.offer.title = 'Сдам ' + TypesListMap[randomAds.offer.type][1];
+      randomAds.offer.description = 'Сдаю ' + TypesListMap[randomAds.offer.type][1] + ' всего за ' + randomAds.offer.price + ' рублей.';
       randomAdsList.push(randomAds);
     }
-
     return randomAdsList;
   };
 
-  // функция создания DOM-элемента на основе JS-объекта
+  // функция форматирования текста для комнат
+  function getFormatTextRooms(rooms) {
+    switch (rooms) {
+      case 1:
+        return ' комната для ';
+      case 5:
+        return ' комнат для ';
+      default:
+        return ' комнаты для ';
+    }
+  }
+
+  // функция форматирования текста для гостей
+  function getFormatTextGuests(guests) {
+    if (guests === 1) {
+      return ' гостя';
+    } else {
+      return '-х гостей';
+    }
+  }
+
+  // функции отрисовки шаблона в документ
+  var renderFeatures = function (featuresElement, data) {
+    var featuresContainer = featuresElement.querySelector('.popup__features');
+    featuresContainer.innerHTML = '';
+    data.offer.features.forEach(function (item) {
+      var liElement = document.createElement('li');
+      liElement.classList.add('popup__feature', 'popup__feature--' + item);
+      featuresContainer.appendChild(liElement);
+    });
+    return featuresElement;
+  };
+
+  var renderPhotos = function (photoElement, data) {
+    photoElement.querySelector('.popup__photos').innerHTML = '';
+    data.offer.photos.forEach(function (item) {
+      var imgElement = document.createElement('img');
+      imgElement.classList.add('popup__photo');
+      imgElement.src = item;
+      imgElement.width = 45;
+      imgElement.height = 40;
+      imgElement.alt = 'Фотография квартиры';
+      photoElement.querySelector('.popup__photos').appendChild(imgElement);
+    });
+    return photoElement;
+  };
+
+  // функции создания DOM-элемента на основе JS-объекта
   var renderPinFromTemplate = function (data) {
     var pinElement = similarPinTemplate.cloneNode(true);
     var pinImgElement = pinElement.querySelector('img[src]');
@@ -84,12 +141,30 @@
     pinImgElement.alt = data.offer.title;
     return pinElement;
   };
+
+  var renderCardFromTemplate = function (data, fragmentCard) {
+    var cardElement = similarCardTemplate.cloneNode(true);
+    cardElement.querySelector('.popup__title').textContent = data.offer.title;
+    cardElement.querySelector('.popup__text--address').textContent = data.offer.address;
+    cardElement.querySelector('.popup__text--price').textContent = data.offer.price + '₽/ночь';
+    cardElement.querySelector('.popup__type').textContent = TypesListMap[data.offer.type][0];
+    cardElement.querySelector('.popup__text--capacity').textContent = data.offer.rooms + getFormatTextRooms(data.offer.rooms) + data.offer.guests + getFormatTextGuests(data.offer.guests);
+    cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
+    cardElement.querySelector('.popup__description').textContent = data.offer.description;
+    cardElement.querySelector('.popup__avatar').setAttribute('src', data.author.avatar);
+    fragmentCard.appendChild(renderFeatures(cardElement, data));
+    fragmentCard.appendChild(renderPhotos(cardElement, data));
+    return cardElement;
+  };
+
   // функция отрисовки шаблона в документ
   var renderPins = function (data) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < data.length; i++) {
       fragment.appendChild(renderPinFromTemplate(data[i]));
     }
+    // вывод первого по порядку DOM-элемент объявления
+    fragment.appendChild(renderCardFromTemplate(data[0], fragment));
     return fragment;
   };
 
