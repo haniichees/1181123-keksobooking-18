@@ -14,14 +14,12 @@
   var LOCATION_YMIN = 100;
   var LOCATION_YMAX = 635;
 
-  var userDialog = document.querySelector('.map');
-  userDialog.classList.remove('map--faded');
-  var similarPinTemplate = document.querySelector('#pin')
-    .content
-    .querySelector('.map__pin');
-  var similarCardTemplate = document.querySelector('#card')
-    .content
-    .querySelector('.map__card');
+  var MAIN_PIN_WIDTH = 65;
+  var MAIN_PIN_HEIGHT = 65;
+  var MAIN_PIN_TALE = 22;
+  var ENTER_KEYCODE = 13;
+
+  var isPageActive = false;
 
   // объект типов жилья
   var TypesListMap = {
@@ -30,6 +28,25 @@
     'house': ['Дом', 'дом'],
     'palace': ['Дворец', 'дворец']
   };
+
+  var userDialog = document.querySelector('.map');
+  var mapFilters = document.querySelector('.map__filters-container');
+  var mainPin = document.querySelector('.map__pin--main');
+  var adForm = document.querySelector('.ad-form');
+  var adFormElements = adForm.querySelectorAll('.ad-form__element');
+  var filterForm = document.querySelector('.map__filters');
+  var filterFormElements = filterForm.querySelectorAll('.map__filter');
+  var featuresFilterElement = filterForm.querySelector('.map__features');
+
+  var roomNumberElement = document.querySelector('#room_number');
+  var guestsNumberElement = adForm.querySelector('#capacity');
+  var similarPinTemplate = document.querySelector('#pin')
+    .content
+    .querySelector('.map__pin');
+  var similarCardTemplate = document.querySelector('#card')
+    .content
+    .querySelector('.map__card');
+  var addressInput = document.querySelector('#address');
 
   // функция получения рандомного элемента
   function getRandomElem(arr) {
@@ -142,8 +159,9 @@
     return pinElement;
   };
 
-  var renderCardFromTemplate = function (data, fragmentCard) {
+  var renderCardFromTemplate = function (data) {
     var cardElement = similarCardTemplate.cloneNode(true);
+
     cardElement.querySelector('.popup__title').textContent = data.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = data.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = data.offer.price + '₽/ночь';
@@ -152,22 +170,104 @@
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
     cardElement.querySelector('.popup__description').textContent = data.offer.description;
     cardElement.querySelector('.popup__avatar').setAttribute('src', data.author.avatar);
-    fragmentCard.appendChild(renderFeatures(cardElement, data));
-    fragmentCard.appendChild(renderPhotos(cardElement, data));
+
+    renderFeatures(cardElement, data).querySelector('.popup__features');
+    renderPhotos(cardElement, data).querySelector('.popup__photo');
     return cardElement;
   };
 
   // функция отрисовки шаблона в документ
   var renderPins = function (data) {
-    var fragment = document.createDocumentFragment();
+    var pinsFragment = document.createDocumentFragment();
+    var cardsFragment = document.createDocumentFragment();
+
     for (var i = 0; i < data.length; i++) {
-      fragment.appendChild(renderPinFromTemplate(data[i]));
+      pinsFragment.appendChild(renderPinFromTemplate(data[i]));
     }
-    // вывод первого по порядку DOM-элемент объявления
-    fragment.appendChild(renderCardFromTemplate(data[0], fragment));
-    return fragment;
+    pinContainerElem.appendChild(pinsFragment);
+    cardsFragment.appendChild(renderCardFromTemplate(data[0]));
+    userDialog.insertBefore(cardsFragment, mapFilters);
   };
 
+  // функция изменения состояния формы
+  var changeFormState = function (formElements, isDisabled) {
+    formElements.forEach(function (item) {
+      item.disabled = isDisabled;
+    });
+  };
+  // функция активации окна
+  var activatePage = function () {
+    if (!isPageActive) {
+      userDialog.classList.remove('map--faded');
+      setAddress();
+      adForm.classList.remove('ad-form--disabled');
+      changeFormState(adFormElements, false);
+      changeFormState(filterFormElements, false);
+      featuresFilterElement.disabled = false;
+      isPageActive = true;
+      renderPins(getAds());
+    }
+  };
+  // функция деактивации окна
+  var deactivatePage = function () {
+    userDialog.classList.add('map--faded');
+    setAddress();
+    adForm.classList.add('ad-form--disabled');
+    changeFormState(adFormElements, true);
+    changeFormState(filterFormElements, true);
+    featuresFilterElement.disabled = true;
+  };
+  // функция добавления координат в поле адреса
+  var setAddress = function () {
+    var x = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2);
+    if (isPageActive === true) {
+      var y = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT + MAIN_PIN_TALE);
+    } else {
+      y = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT / 2);
+    }
+    addressInput.value = x + ', ' + y;
+    return addressInput.value;
+  };
+  // функция валидации комнат и гостей
+  var changeSelectOptions = function (selectedIndex) {
+    var selectedRooms = roomNumberElement[selectedIndex].value;
+    guestsNumberElement[guestsNumberElement.length - 1].disabled = true;
+    if (selectedRooms === '100') {
+      for (var j = 0; j < guestsNumberElement.length - 1; j++) {
+        guestsNumberElement[j].disabled = true;
+      }
+      guestsNumberElement[guestsNumberElement.length - 1].disabled = false;
+      guestsNumberElement[guestsNumberElement.length - 1].selected = true;
+    } else {
+      for (var i = 0; i < guestsNumberElement.length - 1; i++) {
+        if (guestsNumberElement[i].value > selectedRooms) {
+          guestsNumberElement[i].disabled = true;
+        } else {
+          guestsNumberElement[i].disabled = false;
+          guestsNumberElement[i].selected = true;
+        }
+      }
+    }
+  };
+
+  changeSelectOptions(0); // первоначальный выбор количества мест
+
+  roomNumberElement.addEventListener('change', function (evt) {
+    var roomsSelectedIndex = evt.currentTarget.options.selectedIndex;
+    changeSelectOptions(roomsSelectedIndex);
+  });
+
+  mainPin.addEventListener('mousedown', function () {
+    activatePage();
+  });
+
+
+  mainPin.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      activatePage();
+    }
+  });
+
   var pinContainerElem = userDialog.querySelector('.map__pins');
-  pinContainerElem.appendChild(renderPins(getAds()));
+  deactivatePage();
 })();
