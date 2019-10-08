@@ -37,7 +37,6 @@
   // функция деактивации окна
   var deactivatePage = function () {
     userDialog.classList.add('map--faded');
-    setAddress();
     adForm.classList.add('ad-form--disabled');
     changeFormState(adFormElements, true);
     changeFormState(filterFormElements, true);
