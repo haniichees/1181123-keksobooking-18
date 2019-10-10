@@ -5,15 +5,16 @@
 
   window.map = {
     // функция отрисовки шаблона в документ
-    renderPins: function (data) {
-      var pinsFragment = document.createDocumentFragment();
+    renderPins: function () {
+      window.backend.load(function (data) {
+        var fragment = document.createDocumentFragment();
 
-      data.forEach(function (pin) {
-        pinsFragment.appendChild(window.pin.renderPinFromTemplate(pin));
-      });
+        for (var i = 0; i < data.length; i++) {
+          fragment.appendChild(window.pin.renderPinFromTemplate(data[i]));
+        }
+        pinContainerElem.appendChild(fragment);
+      }, window.util.showError);
+    }
 
-      pinContainerElem.appendChild(pinsFragment);
-
-    },
   };
 })();

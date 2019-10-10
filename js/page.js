@@ -30,7 +30,7 @@
       changeFormState(filterFormElements, false);
       featuresFilterElement.disabled = false;
       window.util.isPageActive = true;
-      window.map.renderPins(window.data.getAds());
+      window.map.renderPins();
     }
   };
   // функция деактивации окна
