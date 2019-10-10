@@ -10,9 +10,9 @@
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
   var LOCATION_XMIN = 0;
-  var LOCATION_XMAX = 1150;
-  var LOCATION_YMIN = 100;
-  var LOCATION_YMAX = 635;
+  window.LOCATION_XMAX = 1150;
+  window.LOCATION_YMIN = 130;
+  window.LOCATION_YMAX = 630;
 
   // объект типов жилья
   window.TypesListMap = {
@@ -27,8 +27,8 @@
     getAds: function () {
       var randomAdsList = [];
       for (var i = 1; i <= QUANTITY; i++) {
-        var randLocationX = window.util.getRandomInt(LOCATION_XMIN, LOCATION_XMAX);
-        var randLocationY = window.util.getRandomInt(LOCATION_YMIN, LOCATION_YMAX);
+        var randLocationX = window.util.getRandomInt(LOCATION_XMIN, window.LOCATION_XMAX);
+        var randLocationY = window.util.getRandomInt(window.LOCATION_YMIN, window.LOCATION_YMAX);
         var photos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
         var randomAds = {
           'author': {

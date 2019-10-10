@@ -9,9 +9,8 @@
   var filterFormElements = filterForm.querySelectorAll('.map__filter');
   var featuresFilterElement = filterForm.querySelector('.map__features');
 
-  var MAIN_PIN_TALE = 22;
-  var MAIN_PIN_WIDTH = 65;
-  var MAIN_PIN_HEIGHT = 65;
+  var MAIN_PIN_WIDTH = 40;
+  var MAIN_PIN_HEIGHT = 80;
 
   var ENTER_KEYCODE = 13;
 
@@ -25,7 +24,7 @@
   var activatePage = function () {
     if (!window.util.isPageActive) {
       userDialog.classList.remove('map--faded');
-      setAddress();
+      setAddress(parseInt(mainPin.style.left, 10), parseInt(mainPin.style.top, 10));
       adForm.classList.remove('ad-form--disabled');
       changeFormState(adFormElements, false);
       changeFormState(filterFormElements, false);
@@ -44,22 +43,62 @@
   };
   // функция добавления координат в поле адреса
   var setAddress = function (x, y) {
-    addressInput.value = Math.round((x + MAIN_PIN_WIDTH / 2)) + ', ' + Math.round((y + MAIN_PIN_HEIGHT + MAIN_PIN_TALE));
+    addressInput.value = Math.round((x + MAIN_PIN_WIDTH / 2)) + ', ' + Math.round((y + MAIN_PIN_HEIGHT));
     addressInput.readOnly = true;
   };
 
   mainPin.addEventListener('mousedown', function (evt) {
     var target = evt.currentTarget;
     activatePage();
-    setAddress((parseInt(target.style.left, 10)), parseInt(target.style.top, 10));
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+    // функция перемещения метки
+    function onMouseMove(moveEvt) {
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      mainPin.style.top = mainPin.offsetTop - shift.y + 'px';
+      mainPin.style.left = mainPin.offsetLeft - shift.x + 'px';
+      if (parseInt(target.style.left, 10) < 0) {
+        target.style.left = '0px';
+      } else if (parseInt(target.style.left, 10) > window.LOCATION_XMAX - MAIN_PIN_WIDTH - MAIN_PIN_WIDTH / 2) {
+        target.style.left = window.LOCATION_XMAX - MAIN_PIN_WIDTH - MAIN_PIN_WIDTH / 2 + 'px';
+      }
+
+      if (parseInt(target.style.top, 10) < window.LOCATION_YMIN) {
+        target.style.top = window.LOCATION_YMIN + 'px';
+      } else if (parseInt(target.style.top, 10) > window.LOCATION_YMAX - MAIN_PIN_HEIGHT) {
+        target.style.top = window.LOCATION_YMAX - MAIN_PIN_HEIGHT + 'px';
+      }
+
+      setAddress(parseInt(target.style.left, 10), parseInt(target.style.top, 10));
+    }
+
+    function onMouseUp(upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
 
 
   mainPin.addEventListener('keydown', function (evt) {
-    var target = evt.currentTarget;
     if (evt.keyCode === ENTER_KEYCODE) {
       activatePage();
-      setAddress((parseInt(target.style.left, 10)), parseInt(target.style.top, 10));
     }
   });
 
