@@ -44,7 +44,38 @@
     closePopup: function (element) {
       element.remove();
     },
+    // настройки загрузки/отправки/ошибок
+    setupRequest: function (onLoad, onError) {
+      var serverTime = 10000;
+      var statusOk = 200;
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = 'json';
 
+      xhr.addEventListener('load', function () {
+        if (xhr.status === statusOk) {
+          onLoad(xhr.response);
+        } else {
+          onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        }
+      });
+      xhr.addEventListener('error', function () {
+        onError('Произошла ошибка соединения');
+      });
+      xhr.addEventListener('timeout', function () {
+        onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      });
+
+      xhr.timeout = serverTime;
+
+      return xhr;
+    },
+    // показ ошибки
+    showError: function (error) {
+      var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+      errorTemplate.querySelector('.error__message').textContent = error;
+      document.querySelector('main').insertAdjacentElement('afterbegin', errorTemplate);
+    }
 
   };
 })();
