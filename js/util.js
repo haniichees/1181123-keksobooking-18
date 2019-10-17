@@ -33,7 +33,6 @@
       var randInt = Math.floor(Math.random() * (max - min + 1)) + min;
       return randInt;
     },
-
     // функция получения рандомного массива случайной длины
     getRandomArr: function (parentArray) {
       return parentArray.filter(function () {
@@ -69,13 +68,9 @@
 
       return xhr;
     },
-    // показ ошибки
-    showError: function (error) {
-      var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-
-      errorTemplate.querySelector('.error__message').textContent = error;
-      document.querySelector('main').insertAdjacentElement('afterbegin', errorTemplate);
+    // обновление страницы
+    reloadPage: function () {
+      window.location.reload();
     }
-
   };
 })();
