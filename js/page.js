@@ -13,6 +13,7 @@
   var MAIN_PIN_HEIGHT = 80;
 
   var ENTER_KEYCODE = 13;
+  var ESC_KEYCODE = 27;
 
   // функция изменения состояния формы
   var changeFormState = function (formElements, isDisabled) {
@@ -21,10 +22,10 @@
     });
   };
   // функция активации окна
-  var activatePage = function () {
+  window.activatePage = function () {
     if (!window.util.isPageActive) {
       userDialog.classList.remove('map--faded');
-      setAddress(parseInt(mainPin.style.left, 10), parseInt(mainPin.style.top, 10));
+      window.setAddress(parseInt(mainPin.style.left, 10), parseInt(mainPin.style.top, 10));
       adForm.classList.remove('ad-form--disabled');
       changeFormState(adFormElements, false);
       changeFormState(filterFormElements, false);
@@ -34,7 +35,7 @@
     }
   };
   // функция деактивации окна
-  var deactivatePage = function () {
+  window.deactivatePage = function () {
     userDialog.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
     changeFormState(adFormElements, true);
@@ -42,14 +43,15 @@
     featuresFilterElement.disabled = true;
   };
   // функция добавления координат в поле адреса
-  var setAddress = function (x, y) {
+  window.setAddress = function (x, y) {
     addressInput.value = Math.round((x + MAIN_PIN_WIDTH / 2)) + ', ' + Math.round((y + MAIN_PIN_HEIGHT));
     addressInput.readOnly = true;
   };
+  mainPin.addEventListener('click', window.activatePage);
+
 
   mainPin.addEventListener('mousedown', function (evt) {
     var target = evt.currentTarget;
-    activatePage();
 
     var startCoords = {
       x: evt.clientX,
@@ -81,7 +83,7 @@
         target.style.top = window.LOCATION_YMAX - MAIN_PIN_HEIGHT + 'px';
       }
 
-      setAddress(parseInt(target.style.left, 10), parseInt(target.style.top, 10));
+      window.setAddress(parseInt(target.style.left, 10), parseInt(target.style.top, 10));
     }
 
     function onMouseUp(upEvt) {
@@ -96,11 +98,21 @@
   });
 
 
-  mainPin.addEventListener('keydown', function (evt) {
+  window.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      activatePage();
+      window.activatePage();
     }
+
+    if (evt.keyCode === ESC_KEYCODE) {
+      if (document.querySelector('.success')) {
+        window.util.reloadPage();
+      }
+      if (document.querySelector('.error')) {
+        window.util.reloadPage();
+      }
+    }
+
   });
 
-  deactivatePage();
+  window.deactivatePage();
 })();

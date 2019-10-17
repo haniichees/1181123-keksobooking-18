@@ -1,7 +1,8 @@
 'use strict';
 (function () {
   var roomNumberElement = document.querySelector('#room_number');
-
+  var mainPin = document.querySelector('.map__pin--main');
+  var pins = document.querySelector('.map__pins');
   var adForm = document.querySelector('.ad-form');
   var guestsNumberElement = adForm.querySelector('#capacity');
   var typePlace = adForm.querySelector('#type');
@@ -9,6 +10,8 @@
   var selectTimeIn = adForm.querySelector('#timein');
   var selectTimeOut = adForm.querySelector('#timeout');
 
+  var MAIN_PIN_X = 570;
+  var MAIN_PIN_Y = 375;
 
   window.format = {
     // функция форматирования текста для комнат
@@ -54,8 +57,9 @@
       }
     }
   };
+
   // функция валидации цены
-  var checkPriceValidity = function () {
+  var checkPriceMin = function () {
     var price = 0;
     var currentType = typePlace
       .value;
@@ -99,7 +103,7 @@
 
   };
 
-  // ----------------------------------------------------------------
+  // -----------------------------------------------------------------
   changeSelectOptions(0); // первоначальный выбор количества мест
 
   roomNumberElement.addEventListener('change', function (evt) {
@@ -114,7 +118,36 @@
     selectTimeIn.value = selectTimeOut.value;
   });
 
-  adPrice.addEventListener('input', checkPriceValidity);
-  typePlace.addEventListener('input', checkPriceValidity);
+  adPrice.addEventListener('input', checkPriceMin);
+  typePlace.addEventListener('input', checkPriceMin);
   adForm.addEventListener('input', checkTitlePriceValidity);
+  // ----------------------------------------------------------------
+  function resetForm() {
+    adForm.reset();
+    document.querySelector('.map').classList.add('map--faded');
+    adForm.classList.add('ad-form--disabled');
+    pins.textContent = '';
+    mainPin.style.left = MAIN_PIN_X + 'px';
+    mainPin.style.top = MAIN_PIN_Y + 'px';
+
+    changeSelectOptions(0);
+    checkPriceMin();
+
+    pins.appendChild(mainPin);
+    window.setAddress(parseInt(mainPin.style.left, 10), parseInt(mainPin.style.top, 10));
+    var mapCard = document.querySelector('.map__card');
+    if (mapCard) {
+      document.querySelector('.map').removeChild(mapCard);
+    }
+  }
+
+  function onFormSubmit(evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(adForm), function () {
+      window.success.showSuccess();
+      resetForm();
+    }, window.error.showError);
+  }
+
+  adForm.addEventListener('submit', onFormSubmit);
 })();

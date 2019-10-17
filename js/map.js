@@ -1,7 +1,8 @@
 'use strict';
 (function () {
-  var userDialog = document.querySelector('.map');
-  var pinContainerElem = userDialog.querySelector('.map__pins');
+
+  window.userDialog = document.querySelector('.map');
+  window.pinContainerElem = window.userDialog.querySelector('.map__pins');
 
   window.map = {
     // функция отрисовки шаблона в документ
@@ -12,8 +13,8 @@
         for (var i = 0; i < data.length; i++) {
           fragment.appendChild(window.pin.renderPinFromTemplate(data[i]));
         }
-        pinContainerElem.appendChild(fragment);
-      }, window.util.showError);
+        window.pinContainerElem.appendChild(fragment);
+      }, window.error.showError);
     }
 
   };

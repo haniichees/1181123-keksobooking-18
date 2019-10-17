@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+
   var similarPinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
@@ -26,7 +27,7 @@
       pinElement.addEventListener('click', onPinClick);
 
       return pinElement;
-    },
+    }
   };
 
 })();
