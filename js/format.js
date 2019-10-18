@@ -61,8 +61,7 @@
   // функция валидации цены
   var checkPriceMin = function () {
     var price = 0;
-    var currentType = typePlace
-      .value;
+    var currentType = typePlace.value;
     switch (currentType) {
       case 'bungalo':
         price = 0;

@@ -71,6 +71,11 @@
     // обновление страницы
     reloadPage: function () {
       window.location.reload();
+    },
+
+    getHousingType: function (element) {
+      return window.typeOfHouse.value === 'any' ? true : element.offer.type === window.typeOfHouse.value;
     }
+
   };
 })();
