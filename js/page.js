@@ -31,7 +31,7 @@
       changeFormState(filterFormElements, false);
       featuresFilterElement.disabled = false;
       window.util.isPageActive = true;
-      window.map.renderPins();
+      window.map.renderPins(window.filter.sortOffers(window.util.getHousingType));
     }
   };
   // функция деактивации окна
