@@ -9,19 +9,17 @@
   var filterFormElements = filterForm.querySelectorAll('.map__filter');
   var featuresFilterElement = filterForm.querySelector('.map__features');
 
-  var MAIN_PIN_WIDTH = 40;
-  var MAIN_PIN_HEIGHT = 80;
-
-  var ENTER_KEYCODE = 13;
-  var ESC_KEYCODE = 27;
-
-  // функция изменения состояния формы
   var changeFormState = function (formElements, isDisabled) {
     formElements.forEach(function (item) {
       item.disabled = isDisabled;
     });
   };
-  // функция активации окна
+
+  var getAdvertisementsData = function (advertisements) {
+    window.advertisements = advertisements;
+    window.map.renderPins(window.filterAll(window.advertisements));
+  };
+
   window.activatePage = function () {
     if (!window.util.isPageActive) {
       userDialog.classList.remove('map--faded');
@@ -31,10 +29,10 @@
       changeFormState(filterFormElements, false);
       featuresFilterElement.disabled = false;
       window.util.isPageActive = true;
-      window.map.renderPins(window.filter.sortOffers(window.util.getHousingType));
+      window.backend.load(getAdvertisementsData, window.error.showError);
     }
   };
-  // функция деактивации окна
+
   window.deactivatePage = function () {
     userDialog.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
@@ -42,13 +40,12 @@
     changeFormState(filterFormElements, true);
     featuresFilterElement.disabled = true;
   };
-  // функция добавления координат в поле адреса
+
   window.setAddress = function (x, y) {
-    addressInput.value = Math.round((x + MAIN_PIN_WIDTH / 2)) + ', ' + Math.round((y + MAIN_PIN_HEIGHT));
+    addressInput.value = Math.round((x + window.data.MAIN_PIN_WIDTH / 2)) + ', ' + Math.round((y + window.data.MAIN_PIN_HEIGHT));
     addressInput.readOnly = true;
   };
   mainPin.addEventListener('click', window.activatePage);
-
 
   mainPin.addEventListener('mousedown', function (evt) {
     var target = evt.currentTarget;
@@ -57,7 +54,7 @@
       x: evt.clientX,
       y: evt.clientY
     };
-    // функция перемещения метки
+
     function onMouseMove(moveEvt) {
       var shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -73,14 +70,14 @@
       mainPin.style.left = mainPin.offsetLeft - shift.x + 'px';
       if (parseInt(target.style.left, 10) < 0) {
         target.style.left = '0px';
-      } else if (parseInt(target.style.left, 10) > window.LOCATION_XMAX - MAIN_PIN_WIDTH - MAIN_PIN_WIDTH / 2) {
-        target.style.left = window.LOCATION_XMAX - MAIN_PIN_WIDTH - MAIN_PIN_WIDTH / 2 + 'px';
+      } else if (parseInt(target.style.left, 10) > window.data.LOCATION_XMAX - window.data.MAIN_PIN_WIDTH - window.data.MAIN_PIN_WIDTH / 2) {
+        target.style.left = window.data.LOCATION_XMAX - window.data.MAIN_PIN_WIDTH - window.data.MAIN_PIN_WIDTH / 2 + 'px';
       }
 
-      if (parseInt(target.style.top, 10) < window.LOCATION_YMIN) {
-        target.style.top = window.LOCATION_YMIN + 'px';
-      } else if (parseInt(target.style.top, 10) > window.LOCATION_YMAX - MAIN_PIN_HEIGHT) {
-        target.style.top = window.LOCATION_YMAX - MAIN_PIN_HEIGHT + 'px';
+      if (parseInt(target.style.top, 10) < window.data.LOCATION_YMIN) {
+        target.style.top = window.data.LOCATION_YMIN + 'px';
+      } else if (parseInt(target.style.top, 10) > window.data.LOCATION_YMAX - window.data.MAIN_PIN_HEIGHT) {
+        target.style.top = window.data.LOCATION_YMAX - window.data.MAIN_PIN_HEIGHT + 'px';
       }
 
       window.setAddress(parseInt(target.style.left, 10), parseInt(target.style.top, 10));
@@ -99,11 +96,11 @@
 
 
   window.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === window.data.ENTER_KEYCODE) {
       window.activatePage();
     }
 
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.keyCode === window.data.ESC_KEYCODE) {
       if (document.querySelector('.success')) {
         window.util.reloadPage();
       }

@@ -2,30 +2,29 @@
 (function () {
 
   var mainElement = document.querySelector('main');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  var successMessageTemplate = successTemplate.cloneNode(true);
+  var successMessageText = successMessageTemplate.querySelector('.success__message');
+
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var errorMessageTemplate = errorTemplate.cloneNode(true);
+  var errorMessageText = errorMessageTemplate.querySelector('.error__message');
+  var errorCloseButton = errorMessageTemplate.querySelector('.error__button');
 
   window.success = {
-    // успешная отправка
     showSuccess: function () {
-      var successTemplate = document.querySelector('#success').content.querySelector('.success');
-      var successMessage = successTemplate.cloneNode(true);
-      var successText = successMessage.querySelector('.success__message');
-      successText.textContent = 'Данные успешно отправлены';
-      mainElement.appendChild(successMessage);
-      successMessage.addEventListener('click', window.util.reloadPage);
+      successMessageText.textContent = 'Данные успешно отправлены';
+      mainElement.appendChild(successMessageTemplate);
+      successMessageTemplate.addEventListener('click', window.util.reloadPage);
     }
   };
 
   window.error = {
-    // показ ошибки
     showError: function (error) {
-      var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-      var errorMessage = errorTemplate.cloneNode(true);
-      var errorText = errorMessage.querySelector('.error__message');
-      var errorCloseButton = errorMessage.querySelector('.error__button');
-      errorText.textContent = error;
-      mainElement.appendChild(errorMessage);
+      errorMessageText.textContent = error;
+      mainElement.appendChild(errorMessageTemplate);
       errorCloseButton.addEventListener('click', window.util.reloadPage);
-      errorMessage.addEventListener('click', window.util.reloadPage);
+      errorMessageTemplate.addEventListener('click', window.util.reloadPage);
     },
 
 
