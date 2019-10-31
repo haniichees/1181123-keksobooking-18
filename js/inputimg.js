@@ -1,5 +1,5 @@
 'use strict';
-(function() {
+(function () {
   var avatarChooser = document.querySelector('.ad-form-header__upload input[type=file]');
   var avatarPreview = document.querySelector('.ad-form-header__preview img');
   var avatarPreviewDefault = avatarPreview.getAttribute('src');
@@ -10,7 +10,7 @@
   function createImage(file, target) {
     var reader = new FileReader(file);
 
-    reader.addEventListener('load', function() {
+    reader.addEventListener('load', function () {
       if (target === avatarChooser) {
         avatarPreview.src = reader.result;
       }
@@ -32,7 +32,7 @@
     if (target === photoChooser || target === 'reset') {
       var photos = photoContainer.querySelectorAll('.ad-form__photo');
 
-      photos.forEach(function(it) {
+      photos.forEach(function (it) {
         photoContainer.removeChild(it);
       });
     }
@@ -48,7 +48,7 @@
 
     for (var i = 0; i < files.length; i++) {
       var fileName = files[i].name.toLowerCase();
-      var matches = window.data.FILE_TYPES.some(function(it) {
+      var matches = window.data.FILE_TYPES.some(function (it) {
         return fileName.endsWith(it);
       });
 
