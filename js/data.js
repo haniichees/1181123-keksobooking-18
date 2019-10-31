@@ -1,6 +1,8 @@
 'use strict';
 (function () {
   window.data = {
+    FILE_TYPES: ['gif', 'jpg', 'jpeg', 'png'],
+
     URL: 'https://js.dump.academy/keksobooking',
     SERVER_TIME: 10000,
     STATUS_OK: 200,
@@ -25,17 +27,17 @@
     MAX_OFFERS_COUNT: 5,
 
     TypesListMap: {
-      FLAT: 'Квартира',
-      BUNGALO: 'Бунгало',
-      HOUSE: 'Дом',
-      PALACE: 'Дворец'
+      'flat': 'Квартира',
+      'bungalo': 'Бунгало',
+      'house': 'Дом',
+      'palace': 'Дворец'
     },
 
     PricesListMap: {
-      BUNGALO: 0,
-      FLAT: 1000,
-      HOUSE: 5000,
-      PALACE: 10000
+      'bungalo': 0,
+      'flat': 1000,
+      'house': 5000,
+      'palace': 10000
     },
 
     FiltersPriceMap: {

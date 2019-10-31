@@ -2,7 +2,6 @@
 (function () {
   window.debounce = function (callback) {
     var lastTimeout = null;
-
     return function () {
       var parameters = arguments;
       if (lastTimeout) {
