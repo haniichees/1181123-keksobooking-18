@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-
   window.onEscClosePopup = function (evt) {
     var buttons = document.querySelectorAll('.popup__close');
     buttons.forEach(function (item) {

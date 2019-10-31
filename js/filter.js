@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
   var filtersForm = document.querySelector('.map__filters');
   var housingType = filtersForm.querySelector('#housing-type');
@@ -48,19 +47,13 @@
 
   window.filterAll = function (data) {
     return data.filter(function (element) {
-      return (
-        getHousingType(element) &&
-          getHousingPrice(element) &&
-          getHousingRooms(element) &&
-          getHousingGuests(element) &&
-          getHousingFeatures(element)
-      );
+      return (getHousingType(element) && getHousingPrice(element) && getHousingRooms(element) && getHousingGuests(element) && getHousingFeatures(element));
     })
       .slice(0, window.data.MAX_OFFERS_COUNT);
   };
 
   filtersForm.addEventListener('change', window.debounce(function () {
-    window.card.closeCard();
+    window.card.removeCard();
     window.map.removePins();
     window.map.renderPins(window.filterAll(window.advertisements));
   }));

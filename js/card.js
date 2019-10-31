@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-
   var similarCardTemplate = document.querySelector('#card')
     .content
     .querySelector('.map__card');
@@ -51,7 +50,7 @@
       document.querySelector('.map').appendChild(cardElement);
     },
 
-    closeCard: function () {
+    removeCard: function () {
       window.map.removePins();
       if (cardElement) {
         cardElement.remove();

@@ -25,9 +25,7 @@
       mainElement.appendChild(errorMessageTemplate);
       errorCloseButton.addEventListener('click', window.util.reloadPage);
       errorMessageTemplate.addEventListener('click', window.util.reloadPage);
-    },
-
-
+    }
   };
 
 })();

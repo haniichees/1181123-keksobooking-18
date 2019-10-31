@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-
   var similarPinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
@@ -12,7 +11,6 @@
     renderPinFromTemplate: function (data) {
       var pinElement = similarPinTemplate.cloneNode(true);
       var pinImgElement = pinElement.querySelector('img[src]');
-
       pinElement.style = 'left: ' + data.location.x + 'px; ' + 'top: ' + data.location.y + 'px';
       pinImgElement.src = data.author.avatar;
       pinImgElement.alt = data.offer.title;

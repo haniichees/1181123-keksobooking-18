@@ -32,7 +32,7 @@
         default:
           return '-х гостей';
       }
-    },
+    }
   };
 
   var checkSelectOptions = function (selectedIndex) {
