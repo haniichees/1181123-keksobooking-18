@@ -1,18 +1,15 @@
 'use strict';
 (function () {
   var roomNumberElement = document.querySelector('#room_number');
-  var mainPin = document.querySelector('.map__pin--main');
-  var pins = document.querySelector('.map__pins');
 
-  var adForm = document.querySelector('.ad-form');
-  var guestsNumberElement = adForm.querySelector('#capacity');
-  var typePlaceElement = adForm.querySelector('#type');
-  var adPriceElement = adForm.querySelector('#price');
-  var selectTimeInElement = adForm.querySelector('#timein');
-  var selectTimeOutElement = adForm.querySelector('#timeout');
+  var guestsNumberElement = window.dom.adForm.querySelector('#capacity');
+  var typePlaceElement = window.dom.adForm.querySelector('#type');
+  var adPriceElement = window.dom.adForm.querySelector('#price');
+  var selectTimeInElement = window.dom.adForm.querySelector('#timein');
+  var selectTimeOutElement = window.dom.adForm.querySelector('#timeout');
 
   window.format = {
-    getFormatTextRooms: function (rooms) {
+    getTextRooms: function (rooms) {
       switch (rooms) {
         case 1:
           return ' комната для ';
@@ -25,12 +22,11 @@
       }
     },
 
-    getFormatTextGuests: function (guests) {
-      switch (guests) {
-        case 1:
-          return ' гостя';
-        default:
-          return '-х гостей';
+    getTextGuests: function (guests) {
+      if (guests === 1) {
+        return ' гостя';
+      } else {
+        return '-х гостей';
       }
     }
   };
@@ -86,35 +82,35 @@
   };
 
   var resetForm = function () {
-    adForm.reset();
-    document.querySelector('.map').classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
-    pins.textContent = '';
-    mainPin.style.left = window.data.MAIN_PIN_X + 'px';
-    mainPin.style.top = window.data.MAIN_PIN_Y + 'px';
+    window.dom.adForm.reset();
+    window.dom.userDialog.classList.add('map--faded');
+    window.dom.adForm.classList.add('ad-form--disabled');
+    window.pincontainer.element.textContent = '';
+    window.dom.mainPin.style.left = window.data.MAIN_PIN_X + 'px';
+    window.dom.mainPin.style.top = window.data.MAIN_PIN_Y + 'px';
 
     checkSelectOptions(0);
     checkPriceMin();
 
-    pins.appendChild(mainPin);
-    window.setAddress(parseInt(mainPin.style.left, 10), parseInt(mainPin.style.top, 10));
+    window.pincontainer.element.appendChild(window.dom.mainPin);
+    window.checkout.setAddress(false);
     var mapCard = document.querySelector('.map__card');
     if (mapCard) {
-      document.querySelector('.map').removeChild(mapCard);
+      window.dom.userDialog.removeChild(mapCard);
     }
   };
 
   var onFormSubmit = function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(adForm), function () {
-      window.success.showSuccess();
+    window.backend.save(new FormData(window.dom.adForm), function () {
+      window.messages.showSuccess();
       resetForm();
-    }, window.error.showError);
+    }, window.messages.showError);
   };
 
   checkSelectOptions(0);
 
-  adForm.addEventListener('submit', onFormSubmit);
+  window.dom.adForm.addEventListener('submit', onFormSubmit);
 
   roomNumberElement.addEventListener('change', function (evt) {
     var roomsSelectedIndex = evt.currentTarget.options.selectedIndex;
@@ -130,5 +126,5 @@
 
   adPriceElement.addEventListener('input', checkPriceMin);
   typePlaceElement.addEventListener('input', checkPriceMin);
-  adForm.addEventListener('input', checkTitlePriceValidity);
+  window.dom.adForm.addEventListener('input', checkTitlePriceValidity);
 })();

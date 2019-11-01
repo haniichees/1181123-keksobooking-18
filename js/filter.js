@@ -1,14 +1,17 @@
 'use strict';
 (function () {
-  var filtersForm = document.querySelector('.map__filters');
-  var housingType = filtersForm.querySelector('#housing-type');
-  var housingPrice = filtersForm.querySelector('#housing-price');
-  var housingRooms = filtersForm.querySelector('#housing-rooms');
-  var housingGuests = filtersForm.querySelector('#housing-guests');
-  var housingFeatures = filtersForm.querySelector('#housing-features');
+  window.filters = {
+    form: document.querySelector('.map__filters')
+  };
+
+  var housingType = window.filters.form.querySelector('#housing-type');
+  var housingPrice = window.filters.form.querySelector('#housing-price');
+  var housingRooms = window.filters.form.querySelector('#housing-rooms');
+  var housingGuests = window.filters.form.querySelector('#housing-guests');
+  var housingFeatures = window.filters.form.querySelector('#housing-features');
 
   var getHousingType = function (element) {
-    return housingType.value === 'any' ? true : element.offer.type === housingType.value;
+    return housingType.value === 'any' || element.offer.type === housingType.value;
   };
 
   var getHousingPrice = function (element) {
@@ -25,11 +28,11 @@
   };
 
   var getHousingRooms = function (element) {
-    return housingRooms.value === 'any' ? true : element.offer.rooms === Number(housingRooms.value);
+    return housingRooms.value === 'any' || element.offer.rooms === Number(housingRooms.value);
   };
 
   var getHousingGuests = function (element) {
-    return housingGuests.value === 'any' ? true : element.offer.guests === Number(housingGuests.value);
+    return housingGuests.value === 'any' || element.offer.guests === Number(housingGuests.value);
   };
 
   var getHousingFeatures = function (element) {
@@ -52,8 +55,8 @@
       .slice(0, window.data.MAX_OFFERS_COUNT);
   };
 
-  filtersForm.addEventListener('change', window.debounce(function () {
-    window.card.removeCard();
+  window.filters.form.addEventListener('change', window.debounce(function () {
+    window.card.removeAd();
     window.map.removePins();
     window.map.renderPins(window.filterAll(window.advertisements));
   }));

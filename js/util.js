@@ -18,25 +18,9 @@
     document.removeEventListener('keydown', window.onEscClosePopup);
   };
 
+
   window.util = {
     isPageActive: false,
-
-    getRandomElem: function (arr) {
-      var n = Math.floor(Math.random() * arr.length);
-      var randElem = arr[n];
-      return randElem;
-    },
-
-    getRandomInt: function (min, max) {
-      var randInt = Math.floor(Math.random() * (max - min + 1)) + min;
-      return randInt;
-    },
-
-    getRandomArr: function (parentArray) {
-      return parentArray.filter(function () {
-        return Math.floor(Math.random() * 2);
-      });
-    },
 
     closePopup: function (element) {
       element.remove();

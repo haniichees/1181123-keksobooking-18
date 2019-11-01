@@ -1,8 +1,10 @@
 'use strict';
 (function () {
-  var similarCardTemplate = document.querySelector('#card')
-    .content
-    .querySelector('.map__card');
+  window.mapcard = {
+    similarCardTemplate: document.querySelector('#card')
+      .content
+      .querySelector('.map__card')
+  };
   var cardElement;
 
   var renderFeatures = function (featuresElement, data) {
@@ -31,14 +33,14 @@
   };
 
   window.card = {
-    renderCardFromTemplate: function (data) {
-      cardElement = similarCardTemplate.cloneNode(true);
+    renderAdFromTemplate: function (data) {
+      cardElement = window.mapcard.similarCardTemplate.cloneNode(true);
 
       cardElement.querySelector('.popup__title').textContent = data.offer.title;
       cardElement.querySelector('.popup__text--address').textContent = data.offer.address;
       cardElement.querySelector('.popup__text--price').textContent = data.offer.price + '₽/ночь';
       cardElement.querySelector('.popup__type').textContent = window.data.TypesListMap[data.offer.type];
-      cardElement.querySelector('.popup__text--capacity').textContent = data.offer.rooms + window.format.getFormatTextRooms(data.offer.rooms) + data.offer.guests + window.format.getFormatTextGuests(data.offer.guests);
+      cardElement.querySelector('.popup__text--capacity').textContent = data.offer.rooms + window.format.getTextRooms(data.offer.rooms) + data.offer.guests + window.format.getTextGuests(data.offer.guests);
       cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + data.offer.checkin + ', выезд до ' + data.offer.checkout;
       cardElement.querySelector('.popup__description').textContent = data.offer.description;
       cardElement.querySelector('.popup__avatar').setAttribute('src', data.author.avatar);
@@ -50,7 +52,7 @@
       document.querySelector('.map').appendChild(cardElement);
     },
 
-    removeCard: function () {
+    removeAd: function () {
       window.map.removePins();
       if (cardElement) {
         cardElement.remove();

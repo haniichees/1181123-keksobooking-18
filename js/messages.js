@@ -11,15 +11,12 @@
   var errorMessageText = errorMessageTemplate.querySelector('.error__message');
   var errorCloseButton = errorMessageTemplate.querySelector('.error__button');
 
-  window.success = {
+  window.messages = {
     showSuccess: function () {
       successMessageText.textContent = 'Данные успешно отправлены';
       mainElement.appendChild(successMessageTemplate);
       successMessageTemplate.addEventListener('click', window.util.reloadPage);
-    }
-  };
-
-  window.error = {
+    },
     showError: function (error) {
       errorMessageText.textContent = error;
       mainElement.appendChild(errorMessageTemplate);

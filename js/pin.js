@@ -3,26 +3,23 @@
   var similarPinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
-  var similarCardTemplate = document.querySelector('#card')
-    .content
-    .querySelector('.map__card');
 
   window.pin = {
-    renderPinFromTemplate: function (data) {
+    renderFromTemplate: function (data) {
       var pinElement = similarPinTemplate.cloneNode(true);
       var pinImgElement = pinElement.querySelector('img[src]');
       pinElement.style = 'left: ' + data.location.x + 'px; ' + 'top: ' + data.location.y + 'px';
       pinImgElement.src = data.author.avatar;
       pinImgElement.alt = data.offer.title;
 
-      var onPinClick = function () {
-        if (similarCardTemplate) {
-          window.util.closePopup(similarCardTemplate);
+      var onClick = function () {
+        if (window.mapcard.similarCardTemplate) {
+          window.util.closePopup(window.mapcard.similarCardTemplate);
         }
-        window.card.renderCardFromTemplate(data);
+        window.card.renderAdFromTemplate(data);
         document.addEventListener('keydown', window.onEscClosePopup);
       };
-      pinElement.addEventListener('click', onPinClick);
+      pinElement.addEventListener('click', onClick);
 
       return pinElement;
     }
