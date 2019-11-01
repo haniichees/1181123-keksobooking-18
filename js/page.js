@@ -12,6 +12,13 @@
   var filterFormElements = window.filters.form.querySelectorAll('.map__filter');
   var featuresFilterElement = window.filters.form.querySelector('.map__features');
 
+  var limits = {
+    top: window.data.LOCATION_YMIN - window.data.MAIN_PINACTIVE_HEIGHT,
+    right: mapPins.offsetLeft + mapPins.offsetWidth,
+    bottom: window.data.LOCATION_YMAX,
+    left: mapPins.offsetLeft
+  };
+
   var changeFormState = function (formElements, isDisabled) {
     formElements.forEach(function (item) {
       item.disabled = isDisabled;
@@ -50,12 +57,7 @@
       addressInput.readOnly = true;
     }
   };
-  var limits = {
-    top: window.data.LOCATION_YMIN - window.data.MAIN_PINACTIVE_HEIGHT,
-    right: mapPins.offsetLeft + mapPins.offsetWidth,
-    bottom: window.data.LOCATION_YMAX,
-    left: mapPins.offsetLeft
-  };
+
   window.dom.mainPin.addEventListener('click', window.checkout.activatePage);
 
   window.dom.mainPin.addEventListener('mousedown', function (evt) {
